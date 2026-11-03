@@ -1,0 +1,35 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, 'claude/**' ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install SDK platform and NDK
+        run: |
+          NDK=$(grep -oP 'ndkVersion "\K[^"]+' app/build.gradle)
+          sdkmanager --install "ndk;$NDK" "platforms;android-37" "build-tools;36.0.0" > /dev/null
+
+      - name: Build nonRoot release APK
+        run: ./gradlew --no-daemon assembleNonRootRelease
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tvml-apk
+          path: app/build/outputs/apk/nonRoot/release/*.apk

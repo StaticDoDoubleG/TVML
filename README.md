@@ -37,7 +37,7 @@ To restore the stock launcher, run `adb shell pm enable <package>`.
 
 Turn it on in **Settings → Device Preferences → Accessibility**, or with adb:
 ```bash
-adb shell settings put secure enabled_accessibility_services com.limelight/com.limelight.binding.input.MetaKeyInterceptService
+adb shell settings put secure enabled_accessibility_services com.staticdodoubleg.tvml/com.limelight.binding.input.MetaKeyInterceptService
 adb shell settings put secure accessibility_enabled 1
 ```
 You can switch it off in Moonlight under **Settings → Input → Capture Windows/Meta key**.

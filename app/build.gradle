@@ -49,7 +49,7 @@ android {
                 }
             }
 
-            applicationId "com.limelight"
+            applicationId "com.staticdodoubleg.tvml"
             dimension "root"
             buildConfigField "boolean", "ROOT_BUILD", "false"
         }
@@ -118,9 +118,15 @@ android {
             // is to please change the applicationId before you publish.
             //
             // TL;DR: Leave the following line alone!
-            applicationIdSuffix ".unofficial"
-            resValue "string", "app_label", "Moonlight"
+            //
+            // TVML: this fork uses its own applicationId (see nonRoot flavor),
+            // so the ".unofficial" suffix is not needed.
+            resValue "string", "app_label", "TVML"
             resValue "string", "app_label_root", "Moonlight (Root)"
+
+            // TVML: sign with the debug key so CI produces an installable APK.
+            // Replace with a real keystore for long-term use (updates require the same key).
+            signingConfig signingConfigs.debug
 
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
