@@ -1,6 +1,7 @@
 package com.limelight.binding.input;
 
 import android.accessibilityservice.AccessibilityService;
+import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 
@@ -35,8 +36,30 @@ public class MetaKeyInterceptService extends AccessibilityService {
         return keyCode == KeyEvent.KEYCODE_META_LEFT || keyCode == KeyEvent.KEYCODE_META_RIGHT;
     }
 
+    /**
+     * Some TV builds/key layouts deliver the keyboard's Windows key as KEYCODE_HOME
+     * instead of META. Treat HOME coming from a full (alphabetic) keyboard as the
+     * Windows key, but never touch the HOME button of the TV remote.
+     */
+    private static boolean isKeyboardHome(KeyEvent event) {
+        if (event.getKeyCode() != KeyEvent.KEYCODE_HOME) {
+            return false;
+        }
+        InputDevice dev = event.getDevice();
+        return dev != null && !dev.isVirtual() &&
+                dev.getKeyboardType() == InputDevice.KEYBOARD_TYPE_ALPHABETIC;
+    }
+
     @Override
-    protected boolean onKeyEvent(final KeyEvent event) {
+    protected boolean onKeyEvent(KeyEvent original) {
+        KeyEvent ev = original;
+        if (isKeyboardHome(original)) {
+            ev = new KeyEvent(original.getDownTime(), original.getEventTime(), original.getAction(),
+                    KeyEvent.KEYCODE_META_LEFT, original.getRepeatCount(), original.getMetaState(),
+                    original.getDeviceId(), original.getScanCode(), original.getFlags(), original.getSource());
+        }
+        final KeyEvent event = ev;
+
         final Game game = target;
         if (game == null || !game.isCapturingMetaKey()) {
             return false;
