@@ -24,11 +24,8 @@ jobs:
           # Default installs the removed 'tools' package, which fails on current cmdline-tools
           packages: ''
 
-      - name: Install SDK platform and NDK
-        run: |
-          NDK=$(grep -oP 'ndkVersion "\K[^"]+' app/build.gradle)
-          sdkmanager --install "ndk;$NDK" "platforms;android-37" "build-tools;36.0.0" > /dev/null
-
+      # The Android Gradle Plugin downloads the compileSdk platform, build-tools
+      # and the NDK pinned in app/build.gradle automatically (licenses accepted above).
       - name: Build nonRoot release APK
         run: ./gradlew --no-daemon assembleNonRootRelease
 
