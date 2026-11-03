@@ -20,6 +20,9 @@ jobs:
           java-version: 21
 
       - uses: android-actions/setup-android@v3
+        with:
+          # Default installs the removed 'tools' package, which fails on current cmdline-tools
+          packages: ''
 
       - name: Install SDK platform and NDK
         run: |
