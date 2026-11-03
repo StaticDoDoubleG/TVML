@@ -303,4 +303,16 @@
     <string name="analogscroll_none">None (both sticks move the mouse)</string>
     <string name="analogscroll_right">Right analog stick</string>
     <string name="analogscroll_left">Left analog stick</string>
+
+    <!-- TVML -->
+    <string name="tvml_autoconnect_msg">Connecting to the auto-connect PC… (press Back to show the PC list)</string>
+    <string name="tvml_autoconnect_failed">Could not connect to the auto-connect PC</string>
+    <string name="tvml_menu_set_autoconnect">Auto-connect to this PC on startup</string>
+    <string name="tvml_menu_clear_autoconnect">Disable auto-connect</string>
+    <string name="tvml_autoconnect_set">This PC will be connected automatically on startup</string>
+    <string name="tvml_autoconnect_cleared">Auto-connect disabled</string>
+    <string name="tvml_menu_set_autostart_app">Start this app on auto-connect</string>
+    <string name="tvml_menu_clear_autostart_app">Stop starting this app on auto-connect</string>
+    <string name="tvml_title_capture_meta">Capture Windows/Meta key</string>
+    <string name="tvml_summary_capture_meta">Send the Windows (Meta) key of a keyboard to the PC instead of letting Android handle it. Some TVs still intercept it for the Home button.</string>
 </resources>

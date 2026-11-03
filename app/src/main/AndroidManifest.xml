@@ -96,6 +96,17 @@
             <meta-data android:name="WindowManagerPreference:FreeformWindowSize" android:value="system-default" />
             <meta-data android:name="WindowManagerPreference:FreeformWindowOrientation" android:value="landscape" />
 
+        </activity>
+
+        <!-- TVML: launcher / home entry point. Tries to connect to the configured host on
+             start and falls back to the PC list (PcView) on failure. Declaring HOME lets the
+             user set this app as the default launcher so it opens as soon as the TV turns on. -->
+        <activity
+            android:name=".autoconnect.AutoConnectActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:resizeableActivity="true"
+            android:configChanges="mcc|mnc|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -103,6 +114,12 @@
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
                 <category android:name="tv.ouya.intent.category.APP" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <!-- Small hack to support launcher shortcuts without relaunching over and over again when the back button is pressed -->
@@ -177,6 +194,19 @@
         <service
             android:name=".binding.input.driver.UsbDriverService"
             android:label="Usb Driver Service" />
+        <!-- TVML: forwards the Windows/Meta key to the PC instead of Android (Home) -->
+        <service
+            android:name=".binding.input.MetaKeyInterceptService"
+            android:label="@string/tvml_title_capture_meta"
+            android:exported="false"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/tvml_meta_key_service" />
+        </service>
 
         <activity
             android:name=".HelpActivity"

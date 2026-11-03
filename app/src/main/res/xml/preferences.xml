@@ -130,6 +130,11 @@
     <PreferenceCategory android:title="@string/category_input_settings"
         android:key="category_input_settings">
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="checkbox_tvml_capture_meta"
+            android:title="@string/tvml_title_capture_meta"
+            android:summary="@string/tvml_summary_capture_meta" />
+        <CheckBoxPreference
             android:key="checkbox_touchscreen_trackpad"
             android:title="@string/title_checkbox_touchscreen_trackpad"
             android:summary="@string/summary_checkbox_touchscreen_trackpad"

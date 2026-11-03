@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import com.limelight.autoconnect.AutoConnectPrefs;
 import com.limelight.binding.PlatformBinding;
 import com.limelight.binding.crypto.AndroidCryptoProvider;
 import com.limelight.computers.ComputerManagerListener;
@@ -119,6 +120,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
     private final static int FULL_APP_LIST_ID = 9;
     private final static int TEST_NETWORK_ID = 10;
     private final static int GAMESTREAM_EOL_ID = 11;
+    private final static int AUTOCONNECT_ID = 12;
 
     private void initializeViews() {
         setContentView(R.layout.activity_pc_view);
@@ -382,6 +384,11 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
         menu.add(Menu.NONE, TEST_NETWORK_ID, 5, getResources().getString(R.string.pcview_menu_test_network));
         menu.add(Menu.NONE, DELETE_ID, 6, getResources().getString(R.string.pcview_menu_delete_pc));
         menu.add(Menu.NONE, VIEW_DETAILS_ID, 7,  getResources().getString(R.string.pcview_menu_details));
+
+        // TVML: auto-connect target selection
+        boolean isAutoConnect = computer.details.uuid.equalsIgnoreCase(String.valueOf(AutoConnectPrefs.getHostUuid(this)));
+        menu.add(Menu.NONE, AUTOCONNECT_ID, 8, getResources().getString(isAutoConnect ?
+                R.string.tvml_menu_clear_autoconnect : R.string.tvml_menu_set_autoconnect));
     }
 
     @Override
@@ -671,6 +678,17 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                 ServerHelper.doNetworkTest(PcView.this);
                 return true;
 
+            case AUTOCONNECT_ID:
+                if (computer.details.uuid.equalsIgnoreCase(String.valueOf(AutoConnectPrefs.getHostUuid(this)))) {
+                    AutoConnectPrefs.clear(this);
+                    Toast.makeText(this, R.string.tvml_autoconnect_cleared, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    AutoConnectPrefs.setHost(this, computer.details.uuid);
+                    Toast.makeText(this, R.string.tvml_autoconnect_set, Toast.LENGTH_SHORT).show();
+                }
+                return true;
+
             case GAMESTREAM_EOL_ID:
                 HelpLauncher.launchGameStreamEolFaq(PcView.this);
                 return true;
@@ -682,6 +700,11 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
     
     private void removeComputer(ComputerDetails details) {
         managerBinder.removeComputer(details);
+
+        // TVML: forget auto-connect target if it was this PC
+        if (details.uuid.equalsIgnoreCase(String.valueOf(AutoConnectPrefs.getHostUuid(this)))) {
+            AutoConnectPrefs.clear(this);
+        }
 
         new DiskAssetLoader(this).deleteAssetsForComputer(details.uuid);
 

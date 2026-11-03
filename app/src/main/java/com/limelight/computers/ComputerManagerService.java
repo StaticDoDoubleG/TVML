@@ -201,8 +201,7 @@ public class ComputerManagerService extends Service {
             // Set the listener
             ComputerManagerService.this.listener = listener;
 
-            // Start mDNS autodiscovery too
-            discoveryBinder.startDiscovery(MDNS_QUERY_PERIOD_MS);
+            // TVML: mDNS autodiscovery is disabled. Only manually-added (IP) PCs are shown.
 
             synchronized (pollingTuples) {
                 for (PollingTuple tuple : pollingTuples) {
@@ -225,21 +224,7 @@ public class ComputerManagerService extends Service {
         }
 
         public void waitForReady() {
-            synchronized (discoveryServiceConnection) {
-                try {
-                    while (discoveryBinder == null) {
-                        // Wait for the bind notification
-                        discoveryServiceConnection.wait(1000);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-
-                    // InterruptedException clears the thread's interrupt status. Since we can't
-                    // handle that here, we will re-interrupt the thread to set the interrupt
-                    // status back to true.
-                    Thread.currentThread().interrupt();
-                }
-            }
+            // TVML: mDNS discovery service is never bound, so the service is ready immediately
         }
 
         public void waitForPollingStopped() {
@@ -715,9 +700,7 @@ public class ComputerManagerService extends Service {
 
     @Override
     public void onCreate() {
-        // Bind to the discovery service
-        bindService(new Intent(this, DiscoveryService.class),
-                discoveryServiceConnection, Service.BIND_AUTO_CREATE);
+        // TVML: mDNS discovery service is intentionally not bound
 
         // Lookup or generate this device's UID
         idManager = new IdentityManager(this);

@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.List;
 
+import com.limelight.autoconnect.AutoConnectPrefs;
 import com.limelight.computers.ComputerManagerListener;
 import com.limelight.computers.ComputerManagerService;
 import com.limelight.grid.AppGridAdapter;
@@ -70,6 +71,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
     private final static int VIEW_DETAILS_ID = 5;
     private final static int CREATE_SHORTCUT_ID = 6;
     private final static int HIDE_APP_ID = 7;
+    private final static int AUTOSTART_APP_ID = 8;
 
     public final static String HIDDEN_APPS_PREF_FILENAME = "HiddenApps";
 
@@ -416,6 +418,10 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
 
         menu.add(Menu.NONE, VIEW_DETAILS_ID, 4, getResources().getString(R.string.applist_menu_details));
 
+        // TVML: choose which app auto-connect starts
+        menu.add(Menu.NONE, AUTOSTART_APP_ID, 6, getResources().getString(isAutoStartApp(selectedApp.app) ?
+                R.string.tvml_menu_clear_autostart_app : R.string.tvml_menu_set_autostart_app));
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Only add an option to create shortcut if box art is loaded
             // and when we're in grid-mode (not list-mode).
@@ -429,6 +435,11 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
                 }
             }
         }
+    }
+
+    private boolean isAutoStartApp(NvApp app) {
+        return uuidString.equalsIgnoreCase(String.valueOf(AutoConnectPrefs.getHostUuid(this))) &&
+                AutoConnectPrefs.getAppId(this) == app.getAppId();
     }
 
     @Override
@@ -478,6 +489,17 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
 
             case VIEW_DETAILS_ID:
                 Dialog.displayDialog(AppView.this, getResources().getString(R.string.title_details), app.app.toString(), false);
+                return true;
+
+            case AUTOSTART_APP_ID:
+                if (isAutoStartApp(app.app)) {
+                    AutoConnectPrefs.clearApp(this);
+                }
+                else {
+                    AutoConnectPrefs.setApp(this, uuidString, app.app.getAppId(),
+                            app.app.getAppName(), app.app.isHdrSupported());
+                    Toast.makeText(this, R.string.tvml_autoconnect_set, Toast.LENGTH_SHORT).show();
+                }
                 return true;
 
             case HIDE_APP_ID:

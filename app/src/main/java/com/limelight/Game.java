@@ -749,6 +749,9 @@ public class Game extends Activity implements SurfaceHolder.Callback,
         // With Android native pointer capture, capture is lost when focus is lost,
         // so it must be requested again when focus is regained.
         inputCaptureProvider.onWindowFocusChanged(hasFocus);
+
+        // TVML: only intercept the Meta key while the stream window is focused
+        updateMetaKeyInterceptTarget(hasFocus);
     }
 
     private boolean isRefreshRateEqualMatch(float refreshRate) {
@@ -1060,8 +1063,24 @@ public class Game extends Activity implements SurfaceHolder.Callback,
         inputCaptureProvider.destroy();
     }
 
+    // TVML: whether the accessibility service should forward the Meta key to us
+    public boolean isCapturingMetaKey() {
+        return grabbedInput && connected && !isFinishing();
+    }
+
+    private void updateMetaKeyInterceptTarget(boolean active) {
+        if (active && android.preference.PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("checkbox_tvml_capture_meta", true)) {
+            com.limelight.binding.input.MetaKeyInterceptService.setTarget(this);
+        }
+        else {
+            com.limelight.binding.input.MetaKeyInterceptService.clearTarget(this);
+        }
+    }
+
     @Override
     protected void onPause() {
+        updateMetaKeyInterceptTarget(false);
         if (isFinishing()) {
             // Stop any further input device notifications before we lose focus (and pointer capture)
             if (controllerHandler != null) {

@@ -287,4 +287,16 @@
     <string name="title_seekbar_vibrate_fallback_strength">에뮬레이트된 진동 강도 조정</string>
     <string name="summary_analog_scrolling">마우스 에뮬레이션 모드에서 스크롤할 아날로그 스틱을 선택하세요</string>
     <string name="suffix_seekbar_vibrate_fallback_strength">%</string>
+
+    <!-- TVML -->
+    <string name="tvml_autoconnect_msg">자동 연결 PC에 연결 중… (뒤로 버튼을 누르면 PC 목록으로 이동)</string>
+    <string name="tvml_autoconnect_failed">자동 연결 PC에 연결하지 못했습니다</string>
+    <string name="tvml_menu_set_autoconnect">시작 시 이 PC에 자동 연결</string>
+    <string name="tvml_menu_clear_autoconnect">자동 연결 해제</string>
+    <string name="tvml_autoconnect_set">시작 시 이 PC에 자동으로 연결합니다</string>
+    <string name="tvml_autoconnect_cleared">자동 연결이 해제되었습니다</string>
+    <string name="tvml_menu_set_autostart_app">자동 연결 시 이 앱 실행</string>
+    <string name="tvml_menu_clear_autostart_app">자동 연결 시 이 앱 실행 안 함</string>
+    <string name="tvml_title_capture_meta">Windows/Meta 키 가로채기</string>
+    <string name="tvml_summary_capture_meta">키보드의 Windows(Meta) 키를 안드로이드가 처리하지 않고 PC로 전달합니다. 일부 TV는 홈 버튼용으로 여전히 가로챌 수 있습니다.</string>
 </resources>
