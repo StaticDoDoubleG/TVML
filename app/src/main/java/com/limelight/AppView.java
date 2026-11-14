@@ -438,7 +438,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
     }
 
     private boolean isAutoStartApp(NvApp app) {
-        return uuidString.equalsIgnoreCase(String.valueOf(AutoConnectPrefs.getHostUuid(this))) &&
+        return AutoConnectPrefs.isAutoConnectHost(this, uuidString) &&
                 AutoConnectPrefs.getAppId(this) == app.getAppId();
     }
 
@@ -494,6 +494,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
             case AUTOSTART_APP_ID:
                 if (isAutoStartApp(app.app)) {
                     AutoConnectPrefs.clearApp(this);
+                    Toast.makeText(this, R.string.tvml_autoconnect_cleared, Toast.LENGTH_SHORT).show();
                 }
                 else {
                     AutoConnectPrefs.setApp(this, uuidString, app.app.getAppId(),

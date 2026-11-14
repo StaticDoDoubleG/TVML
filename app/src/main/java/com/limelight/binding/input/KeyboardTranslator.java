@@ -364,6 +364,17 @@ public class KeyboardTranslator implements InputManager.InputDeviceListener {
                 translated = 0x2C;
                 break;
 
+            case KeyEvent.KEYCODE_KANA:
+            case KeyEvent.KEYCODE_LANGUAGE_SWITCH:
+                // VK_HANGUL / VK_KANA
+                translated = 0x15;
+                break;
+
+            case KeyEvent.KEYCODE_HENKAN:
+                // VK_HANJA / VK_KANJI
+                translated = 0x19;
+                break;
+
             default:
                 return 0;
             }

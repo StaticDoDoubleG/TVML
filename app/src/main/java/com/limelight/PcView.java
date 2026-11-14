@@ -386,7 +386,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
         menu.add(Menu.NONE, VIEW_DETAILS_ID, 7,  getResources().getString(R.string.pcview_menu_details));
 
         // TVML: auto-connect target selection
-        boolean isAutoConnect = computer.details.uuid.equalsIgnoreCase(String.valueOf(AutoConnectPrefs.getHostUuid(this)));
+        boolean isAutoConnect = AutoConnectPrefs.isAutoConnectHost(this, computer.details.uuid);
         menu.add(Menu.NONE, AUTOCONNECT_ID, 8, getResources().getString(isAutoConnect ?
                 R.string.tvml_menu_clear_autoconnect : R.string.tvml_menu_set_autoconnect));
     }
@@ -679,7 +679,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                 return true;
 
             case AUTOCONNECT_ID:
-                if (computer.details.uuid.equalsIgnoreCase(String.valueOf(AutoConnectPrefs.getHostUuid(this)))) {
+                if (AutoConnectPrefs.isAutoConnectHost(this, computer.details.uuid)) {
                     AutoConnectPrefs.clear(this);
                     Toast.makeText(this, R.string.tvml_autoconnect_cleared, Toast.LENGTH_SHORT).show();
                 }
@@ -702,7 +702,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
         managerBinder.removeComputer(details);
 
         // TVML: forget auto-connect target if it was this PC
-        if (details.uuid.equalsIgnoreCase(String.valueOf(AutoConnectPrefs.getHostUuid(this)))) {
+        if (AutoConnectPrefs.isAutoConnectHost(this, details.uuid)) {
             AutoConnectPrefs.clear(this);
         }
 

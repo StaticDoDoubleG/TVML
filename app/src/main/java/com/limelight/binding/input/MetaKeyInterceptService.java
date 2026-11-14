@@ -1,6 +1,7 @@
 package com.limelight.binding.input;
 
 import android.accessibilityservice.AccessibilityService;
+import android.os.Build;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
@@ -19,6 +20,7 @@ import com.limelight.Game;
  * outside of an active, input-grabbing stream.
  */
 public class MetaKeyInterceptService extends AccessibilityService {
+    private static volatile MetaKeyInterceptService instance;
     private static volatile Game target;
 
     /** Called by Game when it gains/loses focus while streaming. */
@@ -32,8 +34,45 @@ public class MetaKeyInterceptService extends AccessibilityService {
         }
     }
 
+    /**
+     * TVML: Put the Android TV device to sleep / standby (triggers HDMI-CEC TV off)
+     * using AccessibilityService GLOBAL_ACTION_LOCK_SCREEN (API 28+).
+     */
+    public static boolean requestSleep() {
+        MetaKeyInterceptService service = instance;
+        if (service != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return service.performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN);
+        }
+        return false;
+    }
+
+    @Override
+    protected void onServiceConnected() {
+        super.onServiceConnected();
+        instance = this;
+    }
+
     private static boolean isMetaKey(int keyCode) {
         return keyCode == KeyEvent.KEYCODE_META_LEFT || keyCode == KeyEvent.KEYCODE_META_RIGHT;
+    }
+
+    private static boolean isImeSwitchKey(int keyCode) {
+        return keyCode == KeyEvent.KEYCODE_LANGUAGE_SWITCH ||
+                keyCode == KeyEvent.KEYCODE_KANA ||
+                keyCode == KeyEvent.KEYCODE_HENKAN;
+    }
+
+    private static boolean isAltTab(KeyEvent event) {
+        return event.getKeyCode() == KeyEvent.KEYCODE_TAB &&
+                (event.getMetaState() & KeyEvent.META_ALT_ON) != 0;
+    }
+
+    private static boolean shouldIntercept(KeyEvent event) {
+        int keyCode = event.getKeyCode();
+        return isMetaKey(keyCode) ||
+                (event.getMetaState() & KeyEvent.META_META_ON) != 0 ||
+                isAltTab(event) ||
+                isImeSwitchKey(keyCode);
     }
 
     /**
@@ -65,8 +104,8 @@ public class MetaKeyInterceptService extends AccessibilityService {
             return false;
         }
 
-        if (!isMetaKey(event.getKeyCode()) && (event.getMetaState() & KeyEvent.META_META_ON) == 0) {
-            // Not a Meta-related key: let it follow the normal path to the activity
+        if (!shouldIntercept(event)) {
+            // Not an intercepted system key: let it follow the normal path to the activity
             return false;
         }
 
@@ -94,6 +133,9 @@ public class MetaKeyInterceptService extends AccessibilityService {
     @Override
     public void onDestroy() {
         target = null;
+        if (instance == this) {
+            instance = null;
+        }
         super.onDestroy();
     }
 }

@@ -2383,6 +2383,10 @@ public class Game extends Activity implements SurfaceHolder.Callback,
                                 message, true);
                     }
                     else {
+                        if (android.preference.PreferenceManager.getDefaultSharedPreferences(Game.this)
+                                .getBoolean("checkbox_tvml_sleep_on_host_exit", false)) {
+                            com.limelight.binding.input.MetaKeyInterceptService.requestSleep();
+                        }
                         finish();
                     }
                 }

@@ -313,6 +313,8 @@
     <string name="tvml_autoconnect_cleared">Auto-connect disabled</string>
     <string name="tvml_menu_set_autostart_app">Start this app on auto-connect</string>
     <string name="tvml_menu_clear_autostart_app">Stop starting this app on auto-connect</string>
-    <string name="tvml_title_capture_meta">Capture Windows/Meta key</string>
-    <string name="tvml_summary_capture_meta">Send the Windows (Meta) key of a keyboard to the PC instead of letting Android handle it. Some TVs still intercept it for the Home button.</string>
+    <string name="tvml_title_capture_meta">Capture Windows/Meta, Alt+Tab, and IME keys</string>
+    <string name="tvml_summary_capture_meta">Send Windows (Meta), Alt+Tab, and language-switch keys to the PC instead of letting Android handle them. Requires the accessibility service to be enabled.</string>
+    <string name="tvml_title_sleep_on_host_exit">Sleep TV when PC stream ends</string>
+    <string name="tvml_summary_sleep_on_host_exit">Put the Android TV into standby (turning off the TV via HDMI-CEC) when the host PC ends the stream gracefully. Requires the accessibility service (Android 9+).</string>
 </resources>
