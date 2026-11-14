@@ -105,6 +105,7 @@
         <activity
             android:name=".autoconnect.AutoConnectActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:excludeFromRecents="true"
             android:resizeableActivity="true"
             android:configChanges="mcc|mnc|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection">
@@ -199,7 +200,7 @@
         <service
             android:name=".binding.input.MetaKeyInterceptService"
             android:label="@string/tvml_title_capture_meta"
-            android:exported="false"
+            android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />

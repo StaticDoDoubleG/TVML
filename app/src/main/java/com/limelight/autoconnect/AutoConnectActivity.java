@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.widget.Toast;
 
 import com.limelight.AppView;
@@ -149,6 +150,10 @@ public class AutoConnectActivity extends Activity {
         switch (details.state) {
             case ONLINE:
                 if (details.pairState == PairingManager.PairState.PAIRED) {
+                    if (details.activeAddress == null) {
+                        // Address not populated yet; wait for next poll update
+                        break;
+                    }
                     launchStream(details);
                 } else {
                     fallbackToPcList(getString(R.string.scut_not_paired));
@@ -157,8 +162,9 @@ public class AutoConnectActivity extends Activity {
 
             case OFFLINE:
                 // Keep waking the PC until the timeout expires
-                if (details.macAddress != null && System.currentTimeMillis() - lastWolMs > 3000) {
-                    lastWolMs = System.currentTimeMillis();
+                long now = SystemClock.elapsedRealtime();
+                if (details.macAddress != null && (lastWolMs == 0 || now - lastWolMs > 3000)) {
+                    lastWolMs = now;
                     final ComputerDetails wolTarget = details;
                     new Thread() {
                         @Override
@@ -213,7 +219,7 @@ public class AutoConnectActivity extends Activity {
             return;
         }
         if (message != null) {
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
         Intent i = new Intent(this, PcView.class);
         i.setAction(Intent.ACTION_MAIN);

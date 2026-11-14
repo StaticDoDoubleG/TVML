@@ -22,6 +22,11 @@ public class AutoConnectPrefs {
         return prefs(c).getString(KEY_UUID, null);
     }
 
+    public static boolean isAutoConnectHost(Context c, String uuid) {
+        String saved = getHostUuid(c);
+        return saved != null && saved.equalsIgnoreCase(uuid);
+    }
+
     public static void setHost(Context c, String uuid) {
         // Changing the host invalidates the previously selected app
         prefs(c).edit().clear().putString(KEY_UUID, uuid).apply();
