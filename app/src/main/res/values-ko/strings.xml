@@ -297,6 +297,8 @@
     <string name="tvml_autoconnect_cleared">자동 연결이 해제되었습니다</string>
     <string name="tvml_menu_set_autostart_app">자동 연결 시 이 앱 실행</string>
     <string name="tvml_menu_clear_autostart_app">자동 연결 시 이 앱 실행 안 함</string>
-    <string name="tvml_title_capture_meta">Windows/Meta 키 가로채기</string>
-    <string name="tvml_summary_capture_meta">키보드의 Windows(Meta) 키를 안드로이드가 처리하지 않고 PC로 전달합니다. 일부 TV는 홈 버튼용으로 여전히 가로챌 수 있습니다.</string>
+    <string name="tvml_title_capture_meta">Windows/Meta, Alt+Tab 및 한/영 키 가로채기</string>
+    <string name="tvml_summary_capture_meta">키보드의 Windows(Meta), Alt+Tab, 한/영 전환 키를 안드로이드가 처리하지 않고 PC로 전달합니다. 접근성 서비스를 켜야 동작합니다.</string>
+    <string name="tvml_title_sleep_on_host_exit">PC 스트림 종료 시 TV 대기모드 전환</string>
+    <string name="tvml_summary_sleep_on_host_exit">호스트 PC가 스트림을 정상 종료하면(PC 종료/절전 등) 안드로이드 TV를 대기모드로 전환하여 HDMI-CEC로 TV 화면을 끕니다. 접근성 서비스(Android 9 이상)가 필요합니다.</string>
 </resources>

@@ -135,6 +135,11 @@
             android:title="@string/tvml_title_capture_meta"
             android:summary="@string/tvml_summary_capture_meta" />
         <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="checkbox_tvml_sleep_on_host_exit"
+            android:title="@string/tvml_title_sleep_on_host_exit"
+            android:summary="@string/tvml_summary_sleep_on_host_exit" />
+        <CheckBoxPreference
             android:key="checkbox_touchscreen_trackpad"
             android:title="@string/title_checkbox_touchscreen_trackpad"
             android:summary="@string/summary_checkbox_touchscreen_trackpad"

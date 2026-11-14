@@ -1,9 +1,7 @@
 package com.limelight.autoconnect;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.app.Service;
-import android.content.DialogInterface;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -12,6 +10,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.limelight.AppView;
@@ -43,7 +42,7 @@ public class AutoConnectActivity extends Activity {
 
     private String uuid;
     private ComputerManagerService.ComputerManagerBinder managerBinder;
-    private ProgressDialog spinner;
+    private TextView titleView;
     private boolean finished;
     private long lastWolMs;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -96,20 +95,8 @@ public class AutoConnectActivity extends Activity {
             return;
         }
 
-        spinner = new ProgressDialog(this);
-        spinner.setTitle(getString(R.string.conn_establishing_title));
-        spinner.setMessage(getString(R.string.tvml_autoconnect_msg));
-        spinner.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        spinner.setCancelable(true);
-        spinner.setCanceledOnTouchOutside(false);
-        spinner.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                // BACK while connecting: skip auto-connect and show the PC list
-                fallbackToPcList(null);
-            }
-        });
-        spinner.show();
+        setContentView(R.layout.activity_auto_connect);
+        titleView = findViewById(R.id.autoconnect_title);
 
         bindService(new Intent(this, ComputerManagerService.class), serviceConnection,
                 Service.BIND_AUTO_CREATE);
@@ -123,6 +110,9 @@ public class AutoConnectActivity extends Activity {
             AutoConnectPrefs.clear(this);
             fallbackToPcList(getString(R.string.scut_pc_not_found));
             return;
+        }
+        if (titleView != null && computer.name != null) {
+            titleView.setText(computer.name);
         }
 
         managerBinder.invalidateStateForComputer(uuid);
@@ -239,10 +229,6 @@ public class AutoConnectActivity extends Activity {
 
     private void cleanup() {
         handler.removeCallbacks(timeoutRunnable);
-        if (spinner != null) {
-            spinner.dismiss();
-            spinner = null;
-        }
         if (managerBinder != null) {
             managerBinder.stopPolling();
             managerBinder = null;
